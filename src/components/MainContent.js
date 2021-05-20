@@ -12,17 +12,13 @@ const MainContent = () => {
 
   const getData = async (url) => {
     try {
-      //fetch() returns promise
       const result = await fetch(url);
-      //result men status ej ok
       if (!result.ok) {
-        // console.log("result:", result);
+        console.log("result:", result);
         throw Error("Fetch data error: " + result.statusText);
       }
-      //result.json(); returns promise
       const data = await result.json();
       return data;
-      //inget result ex hittar ej url
     } catch (err) {
       console.log("error:", err);
     }
@@ -30,9 +26,8 @@ const MainContent = () => {
   useEffect(() => {
     const getTreeData = async () => {
       const dataFromServer = await getData(treeDataUrl);
-      console.log("dataFromServer", dataFromServer);
-      console.log("treeDataUrl:", treeDataUrl);
-      //setting Gui state
+      //   console.log("dataFromServer", dataFromServer);
+      //   console.log("treeDataUrl:", treeDataUrl);
       setTreeData(dataFromServer);
       setIsLoading(false);
       if (dataFromServer) {
@@ -46,7 +41,6 @@ const MainContent = () => {
 
   const openLink = (e, name) => {
     e.currentTarget.classList.toggle("open");
-    console.log("openNode", name);
     setCurrent(name);
   };
 
@@ -54,14 +48,12 @@ const MainContent = () => {
     if (oldSelected) {
       oldSelected.classList.remove("selected");
     }
-    console.log("displayName", name);
     setCurrent(name);
     e.currentTarget.classList.add("selected");
     setOldSelected(e.currentTarget);
   };
 
   const buildNode = (item) => {
-    // console.log("item.children", item.children);
     if (item.children) {
       return (
         <div className="node">
@@ -80,7 +72,6 @@ const MainContent = () => {
         </div>
       );
     } else {
-      //console.log("item.name", item.name);
       return (
         <div className="leaf">
           <span
@@ -93,10 +84,6 @@ const MainContent = () => {
       );
     }
   };
-
-  //   useEffect(() => {
-  //     console.log("current", current);
-  //   }, [current]);
 
   return (
     <section className="main_content">
