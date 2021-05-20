@@ -1,45 +1,15 @@
 import { useState, useEffect } from "react";
 
 const MainContent = () => {
-  const [current, setCurrent] = useState(0);
-  const [open, setOpen] = useState(false);
-  // const nodes{
-  //   "data":[
-  //      {
-  //         "name":"Some node 1",
-  //         "children":[
-  //            {
-  //               "name":"Some node 1.1",
-  //               "children":[
-  //                  {
-  //                     "name":"Some node 1.1.1"
-  //                  }
-  //               ]
-  //            },
-  //            {
-  //               "name":"Some node 1.2"
-  //            },
-  //            {
-  //               "name":"Some node 1.3",
-  //               "children":[
-  //                  {
-  //                     "name":"Some node 1.3.1"
-  //                  }
-  //               ]
-  //            },
-  //            {
-  //               "name":"Some node 1.4"
-  //            }
-  //         ]
-  //      },
-  //      {
-  //         "name":"Some node 2"
-  //      }
+  // const [current, setCurrent] = useState(0);
 
   const data = [
     {
       name: "About",
-      children: [{ name: "About_sub1" }, { name: "About_sub2" }],
+      children: [
+        { name: "About_sub1", children: [{ name: "About_sub_sub1" }] },
+        { name: "About_sub2" },
+      ],
     },
     {
       name: "Contact",
@@ -50,79 +20,76 @@ const MainContent = () => {
       children: [{ name: "Profile_sub1" }, { name: "Profile_sub2" }],
     },
   ];
-  const openSublink = (e, j) => {
-    console.log("subindex", j);
-    e.stopPropagation();
-    //setCurrent(j);
-  };
-
-  const toggleOpen = (e) => {
+  const openLink = (e) => {
     e.currentTarget.classList.toggle("open");
+    e.stopPropagation();
   };
 
-  useEffect(() => {}, []);
+  const openNode = () => {
+    console.log("openNode");
+  };
 
-  useEffect(() => {
-    console.log("current", current);
-  }, [current]);
+  const displayName = (name) => {
+    console.log("displayName", name);
+  };
+
+  const buildNode = (item) => {
+    // console.log("item.children", item.children);
+    if (item.children) {
+      return (
+        <div className="node">
+          <span onClick={(e) => openLink(e)}>{item.name}</span>
+          <br />
+          {item.children.map((subitem) => {
+            return buildNode(subitem);
+          })}
+        </div>
+      );
+    } else {
+      //console.log("item.name", item.name);
+      return (
+        <div className="leaf">
+          <span className="main_link" onClick={() => displayName(item.name)}>
+            {item.name}
+          </span>
+          <br />
+        </div>
+      );
+    }
+  };
+
+  //   useEffect(() => {
+  //     //console.log("current", current);
+  //   }, [current]);
 
   return (
     <section className="main_content">
       <aside className="sidebar">
         <nav className="nav">
-          <ul>
-            {data.map((item, i) => {
-              return (
-                <li
-                  key={i}
-                  className="link_wrapper"
-                  // className={`link_wrapper ${open ? "open" : ""}`}
-                  //onClick={toggleOpen(i)}
-                  // onClick={(e) => e.currentTarget.classList.toggle("open")}
-                  onClick={(e) => toggleOpen(e)}
-                >
-                  <span
-                    className={`main_link ${current === i ? "active" : ""}`}
-                    onClick={() => setCurrent(i)}
-                  >
-                    {item.name}
-                  </span>
-                  <ul className="sublinks">
-                    {item.children.map((item, j) => {
-                      return (
-                        <li
-                          key={j}
-                          onClick={(e) => {
-                            openSublink(e, j);
-                          }}
-                          className={`sub_link ${
-                            current === j ? "active" : ""
-                          }`}
-                        >
-                          {item.name}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
+          {data.map((item, i) => {
+            return (
+              <div
+                key={i}
+                className="link_wrapper"
+                //onClick={(e) => e.currentTarget.classList.toggle("open")}
+              >
+                {buildNode(item)}
+              </div>
+            );
+          })}
         </nav>
       </aside>
 
       <article className="content">
-        {data &&
+        hej
+        {/* {data &&
           data.map((item, i) => {
             return (
-              <div
-                key={i}
-                className={`item_content  ${current === i ? "active" : ""}`}
-              >
+              <div key={i} className="item_content">
                 <h2>{item.name}</h2>
               </div>
             );
-          })}
+          })} */}
       </article>
 
       {/* <article className="content">

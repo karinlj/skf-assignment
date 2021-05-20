@@ -45,6 +45,24 @@ p {
   //   }
   // }
   .main_content {
+    .node {
+      max-height: 100px;
+      &.open {
+        // opacity: 1;
+        max-height: 350px;
+      }
+
+      .node {
+        margin-left: 1rem;
+        .leaf {
+          margin-left: 1rem;
+        }
+      }
+      .leaf {
+        margin-left: 1rem;
+      }
+    }
+
     // width: 80%;
     // padding: 4rem 3rem;
 
