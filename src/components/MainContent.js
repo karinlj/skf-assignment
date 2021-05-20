@@ -1,9 +1,135 @@
+import { useState, useEffect } from "react";
+
 const MainContent = () => {
+  const [current, setCurrent] = useState(0);
+  const [open, setOpen] = useState(false);
+  // const nodes{
+  //   "data":[
+  //      {
+  //         "name":"Some node 1",
+  //         "children":[
+  //            {
+  //               "name":"Some node 1.1",
+  //               "children":[
+  //                  {
+  //                     "name":"Some node 1.1.1"
+  //                  }
+  //               ]
+  //            },
+  //            {
+  //               "name":"Some node 1.2"
+  //            },
+  //            {
+  //               "name":"Some node 1.3",
+  //               "children":[
+  //                  {
+  //                     "name":"Some node 1.3.1"
+  //                  }
+  //               ]
+  //            },
+  //            {
+  //               "name":"Some node 1.4"
+  //            }
+  //         ]
+  //      },
+  //      {
+  //         "name":"Some node 2"
+  //      }
+
+  const data = [
+    {
+      name: "About",
+      children: [{ name: "About_sub1" }, { name: "About_sub2" }],
+    },
+    {
+      name: "Contact",
+      children: [{ name: "Contact_sub1" }, { name: "Contact_sub2" }],
+    },
+    {
+      name: "Profile",
+      children: [{ name: "Profile_sub1" }, { name: "Profile_sub2" }],
+    },
+  ];
+  const openSublink = (e, j) => {
+    console.log("subindex", j);
+    e.stopPropagation();
+    //setCurrent(j);
+  };
+
+  const toggleOpen = (e) => {
+    e.currentTarget.classList.toggle("open");
+  };
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    console.log("current", current);
+  }, [current]);
+
   return (
     <section className="main_content">
-      <article>
-        <h1>Hello world</h1>
+      <aside className="sidebar">
+        <nav className="nav">
+          <ul>
+            {data.map((item, i) => {
+              return (
+                <li
+                  key={i}
+                  className="link_wrapper"
+                  // className={`link_wrapper ${open ? "open" : ""}`}
+                  //onClick={toggleOpen(i)}
+                  // onClick={(e) => e.currentTarget.classList.toggle("open")}
+                  onClick={(e) => toggleOpen(e)}
+                >
+                  <span
+                    className={`main_link ${current === i ? "active" : ""}`}
+                    onClick={() => setCurrent(i)}
+                  >
+                    {item.name}
+                  </span>
+                  <ul className="sublinks">
+                    {item.children.map((item, j) => {
+                      return (
+                        <li
+                          key={j}
+                          onClick={(e) => {
+                            openSublink(e, j);
+                          }}
+                          className={`sub_link ${
+                            current === j ? "active" : ""
+                          }`}
+                        >
+                          {item.name}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+
+      <article className="content">
+        {data &&
+          data.map((item, i) => {
+            return (
+              <div
+                key={i}
+                className={`item_content  ${current === i ? "active" : ""}`}
+              >
+                <h2>{item.name}</h2>
+              </div>
+            );
+          })}
       </article>
+
+      {/* <article className="content">
+        <h3 id="one">Some node 1</h3>
+        <h3 id="two">Some node 2</h3>
+        <h3 id="three">Some node 3</h3>
+      </article> */}
     </section>
   );
 };

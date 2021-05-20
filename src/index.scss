@@ -14,56 +14,102 @@ ul {
 //typgraphy
 h1 {
   font-size: 1.8em;
-  // @media all and (min-width: $md-min) {
-  //   font-size: 2em;
-  // }
-  // @media all and (min-width: $xl-min) {
-  //   font-size: 2.5rem;
-  // }
 }
 h2 {
-  font-size: 1.6rem;
-  // @media all and (min-width: $md-min) {
-  //   font-size: 1.8rem;
-  // }
-  // @media all and (min-width: $lg-min) {
-  //   font-size: 2rem;
-  // }
+  font-size: 1.5rem;
 }
 h4 {
   font-size: 1.4rem;
-  // @media all and (min-width: $lg-min) {
-  //   font-size: 1.5rem;
-  // }
 }
 p {
   font-size: 1rem;
 }
 .site_header {
   display: flex;
-  padding: 0.5rem 2rem;
-  background: teal;
+  padding: 0.5rem 3rem;
+  border-bottom: 2px solid #e0e0e0;
+  text-transform: uppercase;
 }
 .main_section {
-  padding: 2rem;
-  display: flex;
-  background: lightgreen;
+  // display: flex;
   height: 100vh;
-  .sidebar {
-    width: 20%;
-    background: pink;
-    padding: 2rem 1rem;
+  // .sidebar {
+  //   width: 20%;
+  //   padding: 3rem;
+  //   border-right: 1px solid #e0e0e0;
+  //   ul {
+  //     li {
+  //       text-align: left;
+  //       margin: 0.25rem 0;
+  //     }
+  //   }
+  // }
+  .main_content {
+    // width: 80%;
+    // padding: 4rem 3rem;
 
-    ul {
-      li {
-        text-align: left;
-        margin: 0.25rem 0;
+    //tillfälligt
+    height: 100vh;
+    display: flex;
+    .content {
+      width: 80%;
+      padding: 4rem 3rem;
+      .item_content {
+        display: none;
+        &.active {
+          display: block;
+        }
+      }
+      // #one {
+      //   height: 300px;
+      //   background: pink;
+      // }
+      // #two {
+      //   height: 300px;
+      //   background: lightgreen;
+      // }
+      // #three {
+      //   height: 300px;
+      //   background: lightgrey;
+      // }
+    }
+
+    .sidebar {
+      width: 20%;
+      padding: 3rem;
+      border-right: 1px solid #e0e0e0;
+      ul {
+        li.link_wrapper {
+          text-align: left;
+          margin: 0.5rem 0;
+          .main_link {
+            cursor: pointer;
+            &.active {
+              color: deeppink;
+            }
+          }
+          .sub_link {
+            cursor: pointer;
+            margin-left: 1rem;
+            padding: 0.25rem;
+            font-size: 90%;
+            color: initial;
+            max-height: 0;
+            overflow-y: hidden;
+            transition: all 0.4s ease-out;
+            opacity: 0;
+            &.active {
+              color: dodgerblue;
+            }
+          }
+          &.open {
+            .sub_link {
+              opacity: 1;
+              max-height: 350px;
+            }
+          }
+        }
       }
     }
-  }
-  .main_content {
-    width: 80%;
-    background: green;
-    padding: 4rem 2rem;
   }
 }

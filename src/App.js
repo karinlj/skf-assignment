@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Header />
       <section className="main_section">
-        <Sidebar />
+        {/* <Sidebar /> */}
         <MainContent />
       </section>
     </div>
