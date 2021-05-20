@@ -1,36 +1,63 @@
 import { useState, useEffect } from "react";
+//import TreeData from "../data/treeData.json";
 
 const MainContent = () => {
-  // const [current, setCurrent] = useState(0);
+  const [treeData, setTreeData] = useState(null);
+  const [current, setCurrent] = useState("");
+  const [oldSelected, setOldSelected] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const data = [
-    {
-      name: "About",
-      children: [
-        { name: "About_sub1", children: [{ name: "About_sub_sub1" }] },
-        { name: "About_sub2" },
-      ],
-    },
-    {
-      name: "Contact",
-      children: [{ name: "Contact_sub1" }, { name: "Contact_sub2" }],
-    },
-    {
-      name: "Profile",
-      children: [{ name: "Profile_sub1" }, { name: "Profile_sub2" }],
-    },
-  ];
-  const openLink = (e) => {
+  const treeDataUrl = "http://localhost:9000/data/";
+
+  const getData = async (url) => {
+    try {
+      //fetch() returns promise
+      const result = await fetch(url);
+      //result men status ej ok
+      if (!result.ok) {
+        // console.log("result:", result);
+        throw Error("Fetch data error: " + result.statusText);
+      }
+      //result.json(); returns promise
+      const data = await result.json();
+      return data;
+      //inget result ex hittar ej url
+    } catch (err) {
+      console.log("error:", err);
+    }
+  };
+  useEffect(() => {
+    const getTreeData = async () => {
+      const dataFromServer = await getData(treeDataUrl);
+      console.log("dataFromServer", dataFromServer);
+      console.log("treeDataUrl:", treeDataUrl);
+      //setting Gui state
+      setTreeData(dataFromServer);
+      setIsLoading(false);
+      if (dataFromServer) {
+        setError(null);
+      } else {
+        setError("Ooops!! Could not fetch data...");
+      }
+    };
+    getTreeData();
+  }, []);
+
+  const openLink = (e, name) => {
     e.currentTarget.classList.toggle("open");
-    e.stopPropagation();
+    console.log("openNode", name);
+    setCurrent(name);
   };
 
-  const openNode = () => {
-    console.log("openNode");
-  };
-
-  const displayName = (name) => {
+  const displayName = (e, name) => {
+    if (oldSelected) {
+      oldSelected.classList.remove("selected");
+    }
     console.log("displayName", name);
+    setCurrent(name);
+    e.currentTarget.classList.add("selected");
+    setOldSelected(e.currentTarget);
   };
 
   const buildNode = (item) => {
@@ -38,8 +65,15 @@ const MainContent = () => {
     if (item.children) {
       return (
         <div className="node">
-          <span onClick={(e) => openLink(e)}>{item.name}</span>
-          <br />
+          <span
+            className="node_link"
+            onClick={(e) => {
+              openLink(e, item.name);
+            }}
+          >
+            {item.name}
+          </span>
+
           {item.children.map((subitem) => {
             return buildNode(subitem);
           })}
@@ -49,54 +83,41 @@ const MainContent = () => {
       //console.log("item.name", item.name);
       return (
         <div className="leaf">
-          <span className="main_link" onClick={() => displayName(item.name)}>
+          <span
+            className="leaf_link"
+            onClick={(e) => displayName(e, item.name)}
+          >
             {item.name}
           </span>
-          <br />
         </div>
       );
     }
   };
 
   //   useEffect(() => {
-  //     //console.log("current", current);
+  //     console.log("current", current);
   //   }, [current]);
 
   return (
     <section className="main_content">
       <aside className="sidebar">
         <nav className="nav">
-          {data.map((item, i) => {
-            return (
-              <div
-                key={i}
-                className="link_wrapper"
-                //onClick={(e) => e.currentTarget.classList.toggle("open")}
-              >
-                {buildNode(item)}
-              </div>
-            );
-          })}
+          {error && <div className="error">{error}</div>}
+          {isLoading && <div className="loading">Loading...</div>}
+          {treeData &&
+            treeData.map((item, i) => {
+              return (
+                <div key={i} className="link_wrapper">
+                  {buildNode(item)}
+                </div>
+              );
+            })}
         </nav>
       </aside>
 
       <article className="content">
-        hej
-        {/* {data &&
-          data.map((item, i) => {
-            return (
-              <div key={i} className="item_content">
-                <h2>{item.name}</h2>
-              </div>
-            );
-          })} */}
+        <h2>{current}</h2>
       </article>
-
-      {/* <article className="content">
-        <h3 id="one">Some node 1</h3>
-        <h3 id="two">Some node 2</h3>
-        <h3 id="three">Some node 3</h3>
-      </article> */}
     </section>
   );
 };
